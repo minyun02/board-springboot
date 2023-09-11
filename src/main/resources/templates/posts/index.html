@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>게시판 페이지</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<!--    <link href="/css/search-bar.css" rel="stylesheet">-->
+<!--    <link href="/css/posts/table-header.css" rel="stylesheet">-->
+</head>
+
+<body>
+<header id="header" th:replace="header :: header"></header>
+
+<main class="container" th:object="${posts}">
+
+    <div class="row">
+        <div class="card card-margin search-form">
+            <div class="card-body p-0">
+                <form id="search-form" th:action="'/posts'" th:method="get">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row no-gutters">
+                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                                    <label for="search-type" hidden>검색 유형</label>
+                                    <select class="form-control" id="search-type" name="searchType">
+                                        <option th:each="searchType : ${searchTypes}"
+                                                th:value="${searchType.name()}"
+                                                th:text="${searchType.description}"
+                                                th:selected="${param.searchType != null && (param.searchType.toString == searchType.name())}"
+                                        ></option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
+                                    <label for="search-value" hidden>검색어</label>
+                                    <input type="text" placeholder="검색어..." class="form-control" id="search-value" name="searchValue" th:value="${param.searchValue}">
+                                </div>
+                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
+                                    <button type="submit" class="btn btn-base">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <table class="table" id="article-table">
+            <thead>
+            <tr>
+                <th class="title col-6"><a th:href="@{/posts(
+                    page=${posts.number},
+                    sort='title' + (*{sort.getOrderFor('title')} != null ? (*{sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''),
+                    searchType=${param.searchType},
+                    searchValue=${param.searchValue}
+                )}">제목</a></th>
+                <th class="hashtag col-2"><a th:href="@{/posts(
+                    page=${posts.number},
+                    sort='hashtags' + (*{sort.getOrderFor('hashtags')} != null ? (*{sort.getOrderFor('hashtags').direction.name} != 'DESC' ? ',desc' : '') : ''),
+                    searchType=${param.searchType},
+                    searchValue=${param.searchValue}
+                )}">해시태그</a></th>
+                <th class="user-id"><a th:href="@{/posts(
+                    page=${posts.number},
+                    sort='user.username' + (*{sort.getOrderFor('user.username')} != null ? (*{sort.getOrderFor('user.username').direction.name} != 'DESC' ? ',desc' : '') : ''),
+                    searchType=${param.searchType},
+                    searchValue=${param.searchValue}
+                )}">작성자</a></th>
+                <th class="registered-at"><a th:href="@{/posts(
+                    page=${posts.number},
+                    sort='registeredAt' + (*{sort.getOrderFor('registeredAt')} != null ? (*{sort.getOrderFor('registeredAt').direction.name} != 'DESC' ? ',desc' : '') : ''),
+                    searchType=${param.searchType},
+                    searchValue=${param.searchValue}
+                )}">작성일</a></th>
+            </tr>
+            </thead>
+            <tbody th:remove="all-but-first">
+            <tr th:each="post : ${posts}">
+                <td class="title"><a th:text="${post.title}" th:href="@{'/posts/' + ${post.id}}"></a></td>
+                <td class="hashtag"><span class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></td>
+                <td class="user-id" th:text="${post.user.userName}"></td>
+                <td class="registered-at"><time th:datetime="${post.registeredAt}" th:text="${#temporals.format(post.registeredAt, 'yyyy-MM-dd')}"></time></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-primary me-md-2" role="button" id="write-article" th:href="@{/posts/create}">글쓰기</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <nav id="pagination" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a th:href="@{/posts(page=${posts.number - 1})}" th:class="'page-link' + (${posts.number} <= 0 ? ' disabled' : '')">이전</a>
+                </li>
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                    <a th:text="${pageNumber + 1}" th:href="@{/posts(page=${pageNumber})}" th:class="'page-link' + (${pageNumber} == ${posts.number} ? ' disabled' : '')">
+                    </a>
+                </li>
+                <li class="page-item"><a th:href="@{/posts(page=${posts.number + 1})}" th:class="'page-link' + (${posts.number} >= ${posts.totalPages - 1} ? ' disabled' : '')">다음</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+<footer id="footer" th:replace="footer :: footer"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>
