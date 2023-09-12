@@ -1,5 +1,6 @@
 package com.minsproject.board.service;
 
+import com.minsproject.board.dto.PostWithCommentsDto;
 import com.minsproject.board.exception.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.SearchType;
@@ -81,6 +82,9 @@ public class PostService {
         postEntityRepository.delete(postEntity);
     }
 
-//    public PostWithCommentsDto searchPostWithComments(Integer postId) {
-//    }
+    public PostWithCommentsDto searchPostWithComments(Integer postId) {
+        return postEntityRepository.findById(postId)
+                .map(PostWithCommentsDto::from)
+                .orElseThrow(() -> new BoardException(ErrorCode.POST_NOT_FOUND, String.format("게시글이 없습니다 - postId = %d", postId)));
+    }
 }

@@ -34,6 +34,10 @@ public class PostEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OrderBy("registeredAt DESC")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private final Set<CommentEntity> comments = new LinkedHashSet<>();
+
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
 
