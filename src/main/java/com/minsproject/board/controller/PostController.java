@@ -4,6 +4,7 @@ import com.minsproject.board.domain.constant.SearchType;
 import com.minsproject.board.dto.request.PostRequest;
 import com.minsproject.board.dto.response.PostResponse;
 import com.minsproject.board.domain.constant.FormStatus;
+import com.minsproject.board.dto.response.PostWithCommentsResponse;
 import com.minsproject.board.dto.security.BoardPrincipal;
 import com.minsproject.board.service.PaginationService;
 import com.minsproject.board.service.PostService;
@@ -48,10 +49,10 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public String post(@PathVariable Integer postId, Pageable pageable, ModelMap map) {
-//        PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.searchPostWithComments( postId));
-        PostResponse post = PostResponse.fromPost(postService.searchPost(pageable, postId));
+        PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.searchPostWithComments(postId));
 
         map.addAttribute("post", post);
+        map.addAttribute("comments", post.commentResponses());
         map.addAttribute("totalCount", postService.getTotalNumberOfPosts());
 
         return "posts/detail";
