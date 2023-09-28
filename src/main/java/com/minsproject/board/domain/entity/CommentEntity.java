@@ -42,12 +42,12 @@ public class CommentEntity {
     private String content;
 
     @Setter
-    @Column
+    @Column(name = "parent_comment_id")
     private Integer parentCommentId;
 
     @OrderBy("registeredAt ASC")
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parentCommentId")
+    @JoinColumn(name = "parent_comment_id")
     private Set<CommentEntity> childComments = new LinkedHashSet<>();
 
     @Column(name = "registered_at")

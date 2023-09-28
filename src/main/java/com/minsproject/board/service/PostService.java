@@ -1,37 +1,48 @@
 package com.minsproject.board.service;
 
+import com.minsproject.board.domain.entity.HashtagEntity;
+import com.minsproject.board.dto.HashtagDto;
 import com.minsproject.board.dto.PostWithCommentsDto;
+import com.minsproject.board.dto.response.PostResponse;
 import com.minsproject.board.exception.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.SearchType;
 import com.minsproject.board.dto.PostDto;
 import com.minsproject.board.domain.entity.PostEntity;
 import com.minsproject.board.domain.entity.UserEntity;
+import com.minsproject.board.repository.HashtagEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
 import com.minsproject.board.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class PostService {
 
     private final UserEntityRepository userEntityRepository;
-
     private final PostEntityRepository postEntityRepository;
+    private final HashtagService hashtagService;
+    private final HashtagEntityRepository hashtagEntityRepository;
 
     @Transactional
     public void create(String username, String title, String body) {
         UserEntity userEntity = userEntityRepository.findByUsername(username)
                 .orElseThrow(() -> new BoardException(ErrorCode.USER_NOT_FOUND, String.format("username = %s", username)));
-
+        Set<HashtagEntity> hashtags = getHashtagsFromBody(body);
         PostEntity postEntity = PostEntity.of(title, body, userEntity);
+        postEntity.addHashtags(hashtags);
         postEntityRepository.save(postEntity);
     }
 
@@ -44,6 +55,7 @@ public class PostService {
             case TITLE -> postEntityRepository.findByTitleContaining(searchKeyword, pageable).map(PostDto::fromEntity);
             case BODY -> postEntityRepository.findByBodyContaining(searchKeyword, pageable).map(PostDto::fromEntity);
             case USERNAME -> postEntityRepository.findByUserUsernameContaining(searchKeyword, pageable).map(PostDto::fromEntity);
+            case HASHTAG -> postEntityRepository.findByHashtags(Arrays.stream(searchKeyword.split(" ")).toList(), pageable).map(PostDto::fromEntity);
         };
     }
 
@@ -86,5 +98,38 @@ public class PostService {
         return postEntityRepository.findById(postId)
                 .map(PostWithCommentsDto::from)
                 .orElseThrow(() -> new BoardException(ErrorCode.POST_NOT_FOUND, String.format("게시글이 없습니다 - postId = %d", postId)));
+    }
+
+    private Set<HashtagEntity> getHashtagsFromBody(String body) {
+        Set<String> hashtagNamesInBody = hashtagService.parseHashtagNames(body);
+        Set<HashtagEntity> hashtags = hashtagService.findHashtagsByNames(hashtagNamesInBody);
+        Set<String> existingHashtagNames = hashtags.stream()
+                .map(HashtagEntity::getHashtagName)
+                .collect(Collectors.toUnmodifiableSet());
+
+        hashtagNamesInBody.forEach(newHashtag -> {
+            if (!existingHashtagNames.contains(newHashtag)) {
+                hashtags.add(HashtagEntity.of(newHashtag));
+            }
+        });
+
+        return hashtags;
+    }
+
+    public Page<PostDto> searchPostsViaHashtag(Set<String> hashtags, String hashtagName, Pageable pageable) {
+        if (hashtagName == null || hashtagName.isBlank()) {
+            hashtagName = hashtags.stream().findFirst().get();
+        }
+
+        return postEntityRepository.findByHashtags(List.of(hashtagName), pageable)
+                .map(PostDto::fromEntity);
+    }
+
+    public Set<String> getAllHashtags() {
+        Set<String> hashtagNames = hashtagEntityRepository.findAll(Sort.unsorted()).stream()
+                .map(HashtagEntity::getHashtagName)
+                .collect(Collectors.toUnmodifiableSet());
+
+        return hashtagNames;
     }
 }

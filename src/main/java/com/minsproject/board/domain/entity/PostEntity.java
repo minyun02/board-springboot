@@ -22,17 +22,25 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id = null;
+    private Integer id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "body", columnDefinition = "TEXT")
+    @Column(name = "body", nullable = false, columnDefinition = "TEXT")
     private String body;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @JoinTable(
+            name = "post_hashtag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<HashtagEntity> hashtags = new LinkedHashSet<>();
 
     @OrderBy("registeredAt DESC")
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
@@ -63,5 +71,9 @@ public class PostEntity {
         entity.setBody(body);
         entity.setUser(user);
         return entity;
+    }
+
+    public void addHashtags(Set<HashtagEntity> hashtags) {
+        this.getHashtags().addAll(hashtags);
     }
 }
