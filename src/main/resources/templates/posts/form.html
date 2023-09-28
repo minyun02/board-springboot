@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,11 +15,11 @@
 <header id="header" th:replace="header :: header"></header>
 
 <div class="container">
-    <header id="article-form-header" class="py-5 text-center">
+    <header id="post-form-header" class="py-5 text-center">
         <h1 th:text="${formStatus} ? '게시글 ' + ${formStatus.description} : _"></h1>
     </header>
 
-    <form id="article-form" th:action="${formStatus?.update} ? '/posts/modify/' + ${post.id} : '/posts/create'" th:method="post">
+    <form id="post-form" th:action="${formStatus?.update} ? '/posts/modify/' + ${post.id} : '/posts/create'" th:method="post">
         <div class="row mb-3 justify-content-md-center">
             <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
             <div class="col-sm-8 col-lg-9">
