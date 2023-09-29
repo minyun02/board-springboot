@@ -33,7 +33,7 @@
         </article>
     </div>
 
-    <div class="row g-5" id="post-buttons" th:if="${#authorization.expression('isAuthenticated()')} and *{user.username} == ${#authentication.name}">
+    <div class="row g-5" id="post-buttons">
         <form id="delete-post-form" th:action="'/posts/delete/' + ${post.id}" th:method="post">
             <div class="pb-5 d-grid gap-2 d-md-block">
                 <a class="btn btn-success me-md-2" role="button" id="update-article" th:href="'/posts/modify/' + *{id}">수정</a>
@@ -66,7 +66,7 @@
                                 <small><time th:datetime="${comment.registeredAt()}" th:text="${#temporals.format(comment.registeredAt(), 'yy-MM-dd HH:mm')}"></time></small>
                                 <p class="mb-1" th:text="${comment.content()}"></p>
                             </div>
-                            <div class="col-2 mb-3 align-self-center" th:if="${#authorization.expression('isAuthenticated()')} and ${comment.username()} == ${#authentication.name}">
+                            <div class="col-2 mb-3 align-self-center">
                                 <button type="submit" class="btn btn-outline-danger">삭제</button>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                         <small><time th:datetime="${childComment.registeredAt()}" th:text="${#temporals.format(childComment.registeredAt(), 'yy-MM-dd HH:mm')}"></time></small>
                                         <p class="mb-1" th:name="content" th:text="${childComment.content()}"></p>
                                     </div>
-                                    <div class="col-2 mb-3 align-self-center" th:if="${#authorization.expression('isAuthenticated()')} and ${childComment.username()} == ${#authentication.name}">
+                                    <div class="col-2 mb-3 align-self-center">
                                         <button type="submit" class="btn btn-outline-danger">삭제</button>
                                     </div>
                                 </div>
