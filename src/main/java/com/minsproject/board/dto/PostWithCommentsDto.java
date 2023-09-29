@@ -15,7 +15,8 @@ public record PostWithCommentsDto(
         LocalDateTime registeredAt,
         LocalDateTime updatedAt,
         LocalDateTime removedAt,
-        Set<CommentDto> commentsDtos
+        Set<CommentDto> commentsDtos,
+        Set<HashtagDto> hashtagDtos
 
 ) {
     public static PostWithCommentsDto of(
@@ -26,10 +27,11 @@ public record PostWithCommentsDto(
             LocalDateTime registeredAt,
             LocalDateTime updatedAt,
             LocalDateTime removedAt,
-            Set<CommentDto> commentsDtos
+            Set<CommentDto> commentsDtos,
+            Set<HashtagDto> hashtagDtos
     ) {
         return new PostWithCommentsDto(
-                id, title, body, user, registeredAt, updatedAt, removedAt, commentsDtos);
+                id, title, body, user, registeredAt, updatedAt, removedAt, commentsDtos, hashtagDtos);
     }
     public static PostWithCommentsDto from(PostEntity entity) {
         return new PostWithCommentsDto(
@@ -42,7 +44,10 @@ public record PostWithCommentsDto(
                 entity.getRemovedAt(),
                 entity.getComments().stream()
                         .map(CommentDto::from)
-                        .collect(Collectors.toCollection(LinkedHashSet::new))
+                        .collect(Collectors.toCollection(LinkedHashSet::new)),
+                entity.getHashtags().stream()
+                        .map(HashtagDto::from)
+                        .collect(Collectors.toUnmodifiableSet())
         );
     }
 }

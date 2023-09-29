@@ -1,3 +1,6 @@
+### querydsl ###
+/src/main/generated
+
 ### JPA Buddy
 .jpb/
 

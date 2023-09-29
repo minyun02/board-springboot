@@ -54,7 +54,7 @@
     </div>
 
     <div class="row">
-        <table class="table" id="article-table">
+        <table class="table" id="post-table">
             <thead>
             <tr>
                 <th class="title col-6"><a th:href="@{/posts(
@@ -86,7 +86,7 @@
             <tbody th:remove="all-but-first">
             <tr th:each="post : ${posts}">
                 <td class="title"><a th:text="${post.title}" th:href="@{'/posts/' + ${post.id}}"></a></td>
-                <td class="hashtag"><span class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></td>
+                <td class="hashtag"><span class="badge text-bg-secondary mx-1" th:each="hashtag : ${post.hashtags()}"><a class="text-reset" th:text="'#' + ${hashtag}" th:href="@{/posts(searchType=${searchTypeHashtag},searchValue=${hashtag})}"></a></span></td>
                 <td class="user-id" th:text="${post.user.userName}"></td>
                 <td class="registered-at"><time th:datetime="${post.registeredAt}" th:text="${#temporals.format(post.registeredAt, 'yyyy-MM-dd')}"></time></td>
             </tr>

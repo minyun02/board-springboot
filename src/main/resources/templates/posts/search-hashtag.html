@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Uno Kim">
+    <title>해시태그 검색</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link href="/css/posts/table-header.css" rel="stylesheet">
+</head>
+
+<body>
+<header id="header" th:replace="(~{header :: header})"></header>
+
+<main class="container" th:object="${posts}">
+    <header class="py-5 text-center">
+        <h1>Hashtags</h1>
+    </header>
+
+    <section class="row">
+        <div id="hashtags" class="col-9 d-flex flex-wrap justify-content-evenly">
+            <div class="p-2" th:each="hashtag : ${hashtags}">
+                <h2 class="text-center lh-lg font-monospace"><a th:text="'#' + ${hashtag}" th:href="@{/posts/search-hashtag(
+                    page=${param.page},
+                    page=${param.sort},
+                    searchValue=${hashtag}
+                )}"></a></h2>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <table class="table" id="post-table">
+        <thead>
+        <tr>
+            <th class="title col-6"><a>제목</a></th>
+            <th class="content col-4"><a>본문</a></th>
+            <th class="user-id"><a>작성자</a></th>
+            <th class="created-at"><a>작성일</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts}">
+            <td class="title"><a th:text="${post.title()}" th:href="@{'/posts/' + ${post.id()}}"></a></td>
+            <td class="content"><span class="d-inline-block text-truncate" style="max-width: 300px;" th:text="${post.body()}"></span></td>
+            <td class="user-id" th:text="${post.user().userName()}"></td>
+            <td class="created-at"><time th:datetime="${post.registeredAt()}" th:text="${#temporals.format(post.registeredAt(), 'yy-MM-dd HH:mm')}"></time></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav id="pagination" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a
+                th:text="'이전'"
+                th:href="@{/posts(page=${posts.number - 1}, searchType=${searchType.name}, searchValue=${param.searchValue})}"
+                th:class="'page-link' + (${posts.number} <= 0 ? ' disabled' : '')"
+            ></a></li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"><a
+                    th:text="${pageNumber + 1}"
+                    th:href="@{/posts(page=${pageNumber}, searchType=${searchType.name}, searchValue=${param.searchValue})}"
+                    th:class="'page-link' + (${posts.number} == ${posts.number} ? ' disabled' : '')"
+            ></a></li>
+            <li class="page-item"><a
+                    th:text="'다음'"
+                    th:href="@{/posts(page=${posts.number + 1}, searchType=${searchType.name}, searchValue=${param.searchValue})}"
+                    th:class="'page-link' + (${posts.number} >= ${posts.totalPages - 1} ? ' disabled' : '')"
+            ></a></li>
+        </ul>
+    </nav>
+
+</main>
+
+<footer id="footer" th:replace="(~{footer :: footer})"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.minsproject.board.dto.response;
 
 import com.minsproject.board.dto.CommentDto;
+import com.minsproject.board.dto.HashtagDto;
 import com.minsproject.board.dto.PostWithCommentsDto;
 import com.minsproject.board.dto.UserDto;
 
@@ -20,7 +21,8 @@ public record PostWithCommentsResponse(
         LocalDateTime registeredAt,
         LocalDateTime updatedAt,
         LocalDateTime removedAt,
-        Set<CommentResponse> commentResponses
+        Set<CommentResponse> commentResponses,
+        Set<String> hashtags
 ) {
     public static PostWithCommentsResponse of(
             Integer id,
@@ -30,10 +32,11 @@ public record PostWithCommentsResponse(
             LocalDateTime registeredAt,
             LocalDateTime updatedAt,
             LocalDateTime removedAt,
-            Set<CommentResponse> commentResponses
+            Set<CommentResponse> commentResponses,
+            Set<String> hashtags
     ) {
         return new PostWithCommentsResponse(
-                id, title, body, user, registeredAt, updatedAt, removedAt, commentResponses);
+                id, title, body, user, registeredAt, updatedAt, removedAt, commentResponses, hashtags);
     }
     public static PostWithCommentsResponse from(PostWithCommentsDto dto) {
         return new PostWithCommentsResponse(
@@ -44,7 +47,10 @@ public record PostWithCommentsResponse(
                 dto.registeredAt(),
                 dto.updatedAt(),
                 dto.removedAt(),
-                organizeChildComments(dto.commentsDtos())
+                organizeChildComments(dto.commentsDtos()),
+                dto.hashtagDtos().stream()
+                        .map(HashtagDto::hashtagName)
+                        .collect(Collectors.toUnmodifiableSet())
         );
     }
 
