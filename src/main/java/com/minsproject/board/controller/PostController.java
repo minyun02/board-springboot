@@ -111,17 +111,14 @@ public class PostController {
             @PageableDefault(sort = "registeredAt", direction = Sort.Direction.DESC) Pageable pageable,
             ModelMap map
     ) {
-        // 해시태그
+        Page<PostResponse> posts = postService.searchPostsViaHashtag(searchValue, pageable).map(PostResponse::from);
         Set<String> hashtags = postService.getAllHashtags();
-        System.out.println(hashtags.toString());
-        // 해시태그를 검색어로 받아서 게시글을 조회하는 로직
-        Page<PostResponse> posts = postService.searchPostsViaHashtag(hashtags, searchValue, pageable).map(PostResponse::from);
-
-        // 페이지
-
+        List<Integer> pageNumbers = paginationService.getPageNumbers(pageable.getPageNumber(), posts.getTotalPages());
 
         map.addAttribute("posts", posts);
         map.addAttribute("hashtags", hashtags);
+        map.addAttribute("pageNumbers", pageNumbers);
+        map.addAttribute("searchType", SearchType.HASHTAG);
 
         return "posts/search-hashtag";
     }

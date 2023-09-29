@@ -55,7 +55,8 @@ public class PostService {
             case TITLE -> postEntityRepository.findByTitleContaining(searchKeyword, pageable).map(PostDto::fromEntity);
             case BODY -> postEntityRepository.findByBodyContaining(searchKeyword, pageable).map(PostDto::fromEntity);
             case USERNAME -> postEntityRepository.findByUserUsernameContaining(searchKeyword, pageable).map(PostDto::fromEntity);
-            case HASHTAG -> postEntityRepository.findByHashtags(Arrays.stream(searchKeyword.split(" ")).toList(), pageable).map(PostDto::fromEntity);
+//            case HASHTAG -> postEntityRepository.findByHashtags(Arrays.stream(searchKeyword.split(" ")).toList(), pageable).map(PostDto::fromEntity);
+            case HASHTAG -> postEntityRepository.findByHashtag(searchKeyword, pageable).map(PostDto::fromEntity);
         };
     }
 
@@ -116,11 +117,10 @@ public class PostService {
         return hashtags;
     }
 
-    public Page<PostDto> searchPostsViaHashtag(Set<String> hashtags, String hashtagName, Pageable pageable) {
+    public Page<PostDto> searchPostsViaHashtag(String hashtagName, Pageable pageable) {
         if (hashtagName == null || hashtagName.isBlank()) {
-            hashtagName = hashtags.stream().findFirst().get();
+            return postEntityRepository.findByHashtags(pageable).map(PostDto::fromEntity);
         }
-
         return postEntityRepository.findByHashtags(List.of(hashtagName), pageable)
                 .map(PostDto::fromEntity);
     }

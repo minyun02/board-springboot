@@ -8,5 +8,7 @@ import java.util.Collection;
 
 public interface PostEntityRepositoryCustom {
 
+    Page<PostEntity> findByHashtag(String hashtagName, Pageable pageable);
+    Page<PostEntity> findByHashtags(Pageable pageable);
     Page<PostEntity> findByHashtags(Collection<String> hashtagNames, Pageable pageable);
 }

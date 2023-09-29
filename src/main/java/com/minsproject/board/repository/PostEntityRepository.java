@@ -24,22 +24,9 @@ import java.util.List;
 public interface PostEntityRepository extends
         JpaRepository<PostEntity, Integer>,
         PostEntityRepositoryCustom
-        ,
-        QuerydslPredicateExecutor<PostEntity>,
-        QuerydslBinderCustomizer<QPostEntity>
 {
     Page<PostEntity> findByTitleContaining(String title, Pageable pageable);
     Page<PostEntity> findByBodyContaining(String body, Pageable pageable);
     Page<PostEntity> findByUserUsernameContaining(String searchKeyword, Pageable pageable);
 
-    @Override
-    default void customize(QuerydslBindings bindings, QPostEntity root) {
-        bindings.excludeUnlistedProperties(true);
-        bindings.including(root.title, root.body, root.hashtags, root.registeredAt);
-//        bindings.bind(root.title).first(StringExpression::likeIgnoreCase); // like '${v}' , first() -> argument를 하나만 받는다.
-        bindings.bind(root.title).first(StringExpression::containsIgnoreCase); // like '%${v}%'
-        bindings.bind(root.body).first(StringExpression::containsIgnoreCase);
-        bindings.bind(root.hashtags.any().hashtagName).first(StringExpression::containsIgnoreCase);
-        bindings.bind(root.registeredAt).first(DateTimeExpression::eq);
-    }
 }
