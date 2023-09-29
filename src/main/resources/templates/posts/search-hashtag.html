@@ -54,9 +54,21 @@
 
     <nav id="pagination" aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li class="page-item"><a
+                th:text="'이전'"
+                th:href="@{/posts(page=${posts.number - 1}, searchType=${searchType.name}, searchValue=${param.searchValue})}"
+                th:class="'page-link' + (${posts.number} <= 0 ? ' disabled' : '')"
+            ></a></li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"><a
+                    th:text="${pageNumber + 1}"
+                    th:href="@{/posts(page=${pageNumber}, searchType=${searchType.name}, searchValue=${param.searchValue})}"
+                    th:class="'page-link' + (${posts.number} == ${posts.number} ? ' disabled' : '')"
+            ></a></li>
+            <li class="page-item"><a
+                    th:text="'다음'"
+                    th:href="@{/posts(page=${posts.number + 1}, searchType=${searchType.name}, searchValue=${param.searchValue})}"
+                    th:class="'page-link' + (${posts.number} >= ${posts.totalPages - 1} ? ' disabled' : '')"
+            ></a></li>
         </ul>
     </nav>
 
