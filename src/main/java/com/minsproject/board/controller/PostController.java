@@ -6,6 +6,7 @@ import com.minsproject.board.dto.response.PostResponse;
 import com.minsproject.board.domain.constant.FormStatus;
 import com.minsproject.board.dto.response.PostWithCommentsResponse;
 import com.minsproject.board.dto.security.BoardPrincipal;
+import com.minsproject.board.service.LikeService;
 import com.minsproject.board.service.PaginationService;
 import com.minsproject.board.service.PostService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -28,6 +28,7 @@ import java.util.Set;
 @Controller
 public class PostController {
 
+    private final LikeService likeService;
     private final PostService postService;
     private final PaginationService paginationService;
 
@@ -49,7 +50,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public String post(@PathVariable Integer postId, Pageable pageable, ModelMap map) {
+    public String post(@PathVariable Integer postId, ModelMap map) {
         PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.searchPostWithComments(postId));
 
         map.addAttribute("post", post);
