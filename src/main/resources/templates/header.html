@@ -12,6 +12,8 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a id="home" class="nav-link px-2 text-secondary" th:href="@{/}">Home</a></li>
                 <li><a id="hashtag" class="nav-link px-2 text-secondary" th:href="@{/posts/search-hashtag}" >Hashtags</a></li>
+                <li><a id="my_posts" class="nav-link px-2 text-secondary" th:href="@{/my/posts}" >My Posts</a></li>
+                <li><a id="notifications" class="nav-link px-2 text-secondary" th:href="@{/notification}" >Notifications</a></li>
             </ul>
 
             <div class="text-end">
@@ -21,7 +23,7 @@
 <!--                <a role="button" id="kakao-login" class="me-2">-->
 <!--                    <img alt="Kakao Login" src="/images/kakao_login_medium.png">-->
 <!--                </a>-->
-                <a role="button" id="logout" class="btn btn-outline-light me-2" sec:authorize="isAuthenticated()">Logout</a>
+                <a role="button" id="logout" class="btn btn-outline-light me-2" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
             </div>
         </div>
     </div>

@@ -1,15 +1,11 @@
 package com.minsproject.board.service;
 
-import com.minsproject.board.domain.entity.HashtagEntity;
-import com.minsproject.board.dto.HashtagDto;
+import com.minsproject.board.domain.entity.*;
 import com.minsproject.board.dto.PostWithCommentsDto;
-import com.minsproject.board.dto.response.PostResponse;
 import com.minsproject.board.exception.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.SearchType;
 import com.minsproject.board.dto.PostDto;
-import com.minsproject.board.domain.entity.PostEntity;
-import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.repository.HashtagEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
 import com.minsproject.board.repository.UserEntityRepository;
@@ -21,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
