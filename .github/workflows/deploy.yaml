@@ -6,6 +6,7 @@ on:
       - master
 
 env:
+  RESOURCE_PATH: ./src/main/resources/application.yaml
   S3_BUCKET_NAME: s3-board
   CODE_DEPLOY_APPLICATION_NAME: CODE-DEPLOY-BOARD
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: CODE-DEPLOY-GROUP
@@ -22,6 +23,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
+
+      - name: Set yaml file
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.RESOURCE_PATH }}
+        env:
+          spring.datasource.url: ${{ secrets.RDS_HOST }}
+          spring.datasource.username: ${{ secrets.RDS_USERNAME }}
+          spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
