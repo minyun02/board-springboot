@@ -1,6 +1,3 @@
-### application.yaml ###
-/src/main/resources/application.yaml
-
 ### querydsl ###
 /src/main/generated
 
