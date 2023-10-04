@@ -38,7 +38,10 @@ public class AuthConfiguration {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
+                .formLogin(login -> login
+                        .loginPage("/users/login")
+                        .defaultSuccessUrl("/")
+                        .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/"))
                 .csrf(csrf -> csrf.disable())
 //                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
