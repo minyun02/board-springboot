@@ -40,7 +40,7 @@ public class AuthConfiguration {
                 )
                 .formLogin(login -> login
                         .loginPage("/users/login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/", true)
                         .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/"))
                 .csrf(csrf -> csrf.disable())
