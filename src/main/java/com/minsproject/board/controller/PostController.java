@@ -2,6 +2,7 @@ package com.minsproject.board.controller;
 
 import com.minsproject.board.domain.constant.SearchType;
 import com.minsproject.board.dto.request.PostRequest;
+import com.minsproject.board.dto.response.CommentResponse;
 import com.minsproject.board.dto.response.PostResponse;
 import com.minsproject.board.domain.constant.FormStatus;
 import com.minsproject.board.dto.response.PostWithCommentsResponse;
@@ -122,5 +123,24 @@ public class PostController {
         map.addAttribute("searchType", SearchType.HASHTAG);
 
         return "posts/search-hashtag";
+    }
+
+    @GetMapping("/my")
+    public String myPostsAndComments(@AuthenticationPrincipal BoardPrincipal boardPrincipal,
+                          @PageableDefault(sort = "registeredAt", direction = Sort.Direction.DESC) Pageable pageable,
+                          ModelMap map)
+    {
+
+        Page<PostResponse> myPosts = postService.searchMyPosts(boardPrincipal.id(), pageable).map(PostResponse::from);
+        Page<CommentResponse> myComments = postService.searchMyComments(boardPrincipal.id(), pageable).map(CommentResponse::from);
+        List<Integer> postsPageNumbers = paginationService.getPageNumbers(pageable.getPageNumber(), myPosts.getTotalPages());
+        List<Integer> commentsPageNumbers = paginationService.getPageNumbers(pageable.getPageNumber(), myComments.getTotalPages());
+
+        map.addAttribute("myPosts", myPosts);
+        map.addAttribute("myComments", myComments);
+        map.addAttribute("postsPageNumbers", postsPageNumbers);
+        map.addAttribute("commentsPageNumbers", commentsPageNumbers);
+
+        return "posts/my";
     }
 }

@@ -43,7 +43,7 @@ public record PostWithCommentsDto(
                 entity.getUpdatedAt(),
                 entity.getRemovedAt(),
                 entity.getComments().stream()
-                        .map(CommentDto::from)
+                        .map(CommentDto::fromEntity)
                         .collect(Collectors.toCollection(LinkedHashSet::new)),
                 entity.getHashtags().stream()
                         .map(HashtagDto::from)

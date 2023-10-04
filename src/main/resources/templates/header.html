@@ -5,24 +5,20 @@
     <title>Title</title>
 </head>
 <body>
-
 <header class="p-3 bg-dark text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a id="home" class="nav-link px-2 text-secondary" th:href="@{/}">Home</a></li>
-                <li><a id="hashtag" class="nav-link px-2 text-secondary" th:href="@{/posts/search-hashtag}" >Hashtags</a></li>
-                <li><a id="my_posts" class="nav-link px-2 text-secondary" th:href="@{/my/posts}" >My Posts</a></li>
-                <li><a id="notifications" class="nav-link px-2 text-secondary" th:href="@{/notification}" >Notifications</a></li>
+                <li><a id="home" class="header-nav nav-link px-2 text-secondary" th:href="@{/}">Home</a></li>
+                <li><a id="hashtag" class="header-nav nav-link px-2 text-secondary" th:href="@{/posts/search-hashtag}" >Hashtags</a></li>
+                <li><a id="my_posts" class="header-nav nav-link px-2 text-secondary" th:href="@{/posts/my}" >My Posts</a></li>
+                <li><a id="notifications" class="header-nav nav-link px-2 text-secondary" th:href="@{/notification}" >Notifications</a></li>
             </ul>
 
             <div class="text-end">
                 <span id="username" class="text-white me-2" sec:authorize="isAuthenticated()" sec:authentication="principal.username"></span>
                 <a role="button" id="login" class="btn btn-outline-light me-2" sec:authorize="!isAuthenticated()" th:href="@{/users/login}">Login</a>
                 <a role="button" id="signup" class="btn btn-outline-light me-2" sec:authorize="!isAuthenticated()" th:href="@{/users/signup}">Signup</a>
-<!--                <a role="button" id="kakao-login" class="me-2">-->
-<!--                    <img alt="Kakao Login" src="/images/kakao_login_medium.png">-->
-<!--                </a>-->
                 <a role="button" id="logout" class="btn btn-outline-light me-2" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
             </div>
         </div>

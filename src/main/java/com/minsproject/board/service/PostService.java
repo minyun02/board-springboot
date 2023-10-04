@@ -1,11 +1,13 @@
 package com.minsproject.board.service;
 
 import com.minsproject.board.domain.entity.*;
+import com.minsproject.board.dto.CommentDto;
 import com.minsproject.board.dto.PostWithCommentsDto;
 import com.minsproject.board.exception.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.SearchType;
 import com.minsproject.board.dto.PostDto;
+import com.minsproject.board.repository.CommentEntityRepository;
 import com.minsproject.board.repository.HashtagEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
 import com.minsproject.board.repository.UserEntityRepository;
@@ -26,10 +28,11 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
 
+    private final HashtagService hashtagService;
     private final UserEntityRepository userEntityRepository;
     private final PostEntityRepository postEntityRepository;
-    private final HashtagService hashtagService;
     private final HashtagEntityRepository hashtagEntityRepository;
+    private final CommentEntityRepository commentEntityRepository;
 
     @Transactional
     public void create(String username, String title, String body) {
@@ -126,5 +129,13 @@ public class PostService {
                 .collect(Collectors.toUnmodifiableSet());
 
         return hashtagNames;
+    }
+
+    public Page<PostDto> searchMyPosts(Integer userId, Pageable pageable) {
+        return postEntityRepository.findAllByUserId(userId, pageable).map(PostDto::fromEntity);
+    }
+
+    public Page<CommentDto> searchMyComments(Integer userId, Pageable pageable) {
+        return commentEntityRepository.findAllByUserId(userId, pageable).map(CommentDto::fromEntity);
     }
 }
