@@ -29,7 +29,7 @@ public record CommentDto(
         return new CommentDto(id, postId, userId, username, content, parentCommentId, registeredAt, updatedAt, removedAt);
     }
 
-    public static CommentDto from(CommentEntity entity) {
+    public static CommentDto fromEntity(CommentEntity entity) {
         return CommentDto.of(
                 entity.getId(),
                 entity.getPost().getId(),
