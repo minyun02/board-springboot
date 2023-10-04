@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping("/signup")
     public String signup(ModelMap map) {
-        return "signup";
+        return "auth/signup";
     }
 
     @PostMapping("/signup")
@@ -31,16 +31,8 @@ public class UserController {
         return "redirect:/login";
     }
 
-//    @GetMapping("/login")
-//    public String login() {
-//
-//        return "/login";
-//    }
-//
-//    @PostMapping("/login")
-//    public String login(String username, String password, HttpServletResponse response, ModelMap map) {
-//        userService.login(username, password, response);
-//
-//        return "/login";
-//    }
+    @GetMapping("/login")
+    public String login() {
+        return "auth/login";
+    }
 }
