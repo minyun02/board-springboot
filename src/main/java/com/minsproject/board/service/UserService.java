@@ -1,5 +1,8 @@
 package com.minsproject.board.service;
 
+import com.minsproject.board.domain.entity.AlarmEntity;
+import com.minsproject.board.dto.AlarmDto;
+import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.exception.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.dto.UserDto;
@@ -10,6 +13,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +29,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserEntityRepository userEntityRepository;
+
+    private final AlarmEntityRepository alarmEntityRepository;
 
     private final BCryptPasswordEncoder encoder;
 
@@ -80,5 +87,10 @@ public class UserService {
 
     public UserDto saveUser(String username, String password, String nickname) {
         return UserDto.fromEntity(userEntityRepository.save(UserEntity.of(username, password, nickname)));
+    }
+
+    public Page<AlarmDto> getAlarm(Integer userId, Pageable pageable) {
+        Page<AlarmEntity> alarm = alarmEntityRepository.findAllByUserId(userId, pageable);
+        return alarm.map(AlarmDto::fromEntity);
     }
 }
