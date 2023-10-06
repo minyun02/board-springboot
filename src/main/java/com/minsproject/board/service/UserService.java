@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
@@ -40,12 +41,12 @@ public class UserService {
 
 
     @Transactional
-    public UserDto join(String username, String password) {
+    public UserDto join(String username, String password, @RequestParam(required = false) String nickname) {
         userEntityRepository.findByUsername(username).ifPresent(it -> {
             throw new BoardException(ErrorCode.DUPLICATED_USER_NAME, String.format("username = $s", username));
         });
 
-        UserEntity savedUser = userEntityRepository.save(UserEntity.of(username, encoder.encode(password)));
+        UserEntity savedUser = userEntityRepository.save(UserEntity.of(username, encoder.encode(password), nickname));
         return UserDto.fromEntity(savedUser);
     }
 
@@ -75,5 +76,9 @@ public class UserService {
     public Optional<UserDto> searchUser(String username) {
         return userEntityRepository.findByUsername(username)
                 .map(UserDto::fromEntity);
+    }
+
+    public UserDto saveUser(String username, String password, String nickname) {
+        return UserDto.fromEntity(userEntityRepository.save(UserEntity.of(username, password, nickname)));
     }
 }
