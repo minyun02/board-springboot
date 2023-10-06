@@ -11,30 +11,36 @@ public record CommentDto(
         Integer postId,
         Integer userId,
         String username,
+        String nickname,
         String content,
         Integer parentCommentId,
         LocalDateTime registeredAt,
         LocalDateTime updatedAt,
         LocalDateTime removedAt
 ) {
-    public static CommentDto of(Integer postId, String username, String content) {
-        return CommentDto.of(postId, null, username, content, null);
+    public static CommentDto of(Integer postId, String username, String nickname, String content) {
+        return CommentDto.of(postId, null, username, nickname, content, null);
     }
 
-    public static CommentDto of(Integer postId, Integer userId, String username, String content, Integer parentCommentId) {
-        return CommentDto.of(null, postId, userId, username, content, parentCommentId, null, null, null);
+    public static CommentDto of(Integer postId, Integer userId, String username, String nickname, String content, Integer parentCommentId) {
+        return CommentDto.of(null, postId, userId, username, nickname, content, parentCommentId, null, null, null);
     }
 
-    public static CommentDto of(Integer id, Integer postId, Integer userId, String username, String content, Integer parentCommentId, LocalDateTime registeredAt, LocalDateTime updatedAt, LocalDateTime removedAt) {
-        return new CommentDto(id, postId, userId, username, content, parentCommentId, registeredAt, updatedAt, removedAt);
+    public static CommentDto of(Integer id, Integer postId, Integer userId, String username, String nickname, String content, Integer parentCommentId, LocalDateTime registeredAt, LocalDateTime updatedAt, LocalDateTime removedAt) {
+        return new CommentDto(id, postId, userId, username, nickname, content, parentCommentId, registeredAt, updatedAt, removedAt);
     }
 
     public static CommentDto fromEntity(CommentEntity entity) {
+        String nickname = entity.getUser().getNickname();
+        if (nickname == null || nickname.isBlank()) {
+            nickname = entity.getUser().getUsername();
+        }
         return CommentDto.of(
                 entity.getId(),
                 entity.getPost().getId(),
                 entity.getUser().getId(),
                 entity.getUser().getUsername(),
+                nickname,
                 entity.getContent(),
                 entity.getParentCommentId(),
                 entity.getRegisteredAt(),

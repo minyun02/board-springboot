@@ -34,6 +34,7 @@ public record PostWithCommentsDto(
                 id, title, body, user, registeredAt, updatedAt, removedAt, commentsDtos, hashtagDtos);
     }
     public static PostWithCommentsDto from(PostEntity entity) {
+
         return new PostWithCommentsDto(
                 entity.getId(),
                 entity.getTitle(),

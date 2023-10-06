@@ -26,7 +26,7 @@ public class UserController {
     public String signup(UserJoinRequest request, ModelMap map) {
 //        map.addAttribute("result", Response.success(UserJoinResponse.from(userService.join(username, password))));
 //        userService.join(username, password);
-        userService.join(request.username(), request.password());
+        userService.join(request.username(), request.password(), request.nickname());
 
         return "redirect:/login";
     }

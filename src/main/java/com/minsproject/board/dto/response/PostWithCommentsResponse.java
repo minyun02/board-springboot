@@ -17,7 +17,8 @@ public record PostWithCommentsResponse(
         Integer id,
         String title,
         String body,
-        UserDto user,
+        String username,
+        String nickname,
         LocalDateTime registeredAt,
         LocalDateTime updatedAt,
         LocalDateTime removedAt,
@@ -28,7 +29,8 @@ public record PostWithCommentsResponse(
             Integer id,
             String title,
             String body,
-            UserDto user,
+            String username,
+            String nickname,
             LocalDateTime registeredAt,
             LocalDateTime updatedAt,
             LocalDateTime removedAt,
@@ -36,14 +38,19 @@ public record PostWithCommentsResponse(
             Set<String> hashtags
     ) {
         return new PostWithCommentsResponse(
-                id, title, body, user, registeredAt, updatedAt, removedAt, commentResponses, hashtags);
+                id, title, body, username, nickname, registeredAt, updatedAt, removedAt, commentResponses, hashtags);
     }
     public static PostWithCommentsResponse from(PostWithCommentsDto dto) {
+        String nickname = dto.user().getNickname();
+        if (nickname == null || nickname.isBlank()) {
+            nickname = dto.user().getUsername();
+        }
         return new PostWithCommentsResponse(
                 dto.id(),
                 dto.title(),
                 dto.body(),
-                dto.user(),
+                dto.user().getUsername(),
+                nickname,
                 dto.registeredAt(),
                 dto.updatedAt(),
                 dto.removedAt(),

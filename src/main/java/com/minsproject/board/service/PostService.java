@@ -52,7 +52,7 @@ public class PostService {
         return switch (searchType) {
             case TITLE -> postEntityRepository.findByTitleContaining(searchKeyword, pageable).map(PostDto::fromEntity);
             case BODY -> postEntityRepository.findByBodyContaining(searchKeyword, pageable).map(PostDto::fromEntity);
-            case USERNAME -> postEntityRepository.findByUserUsernameContaining(searchKeyword, pageable).map(PostDto::fromEntity);
+//            case USERNAME -> postEntityRepository.findByUserUsernameOrNicknameContaining(searchKeyword, pageable).map(PostDto::fromEntity);
 //            case HASHTAG -> postEntityRepository.findByHashtags(Arrays.stream(searchKeyword.split(" ")).toList(), pageable).map(PostDto::fromEntity);
             case HASHTAG -> postEntityRepository.findByHashtag(searchKeyword, pageable).map(PostDto::fromEntity);
         };
