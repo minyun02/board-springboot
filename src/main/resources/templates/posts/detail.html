@@ -24,7 +24,7 @@
         <section class="col-md-3 col-lg-4 order-md-last">
             <aside>
                 <p><input id="post-id" type="hidden" th:value="${post.id()}"></p>
-                <p><span id="username" th:text="'작성자 : ' + ${post.user().getUsername()}"></span></p>
+                <p><span id="username" th:text="'작성자 : ' + ${post.nickname()}"></span></p>
                 <p><time id="registered-at" th:datetime="${post.registeredAt}" th:text="'작성일 : ' + ${#temporals.format(post.registeredAt, 'yyyy-MM-dd HH:mm:ss')}"></time></p>
                 <p><span>해시태그 : </span></p>
                 <p><span id="hashtag" class="badge text-bg-secondary mx-1" th:each="hashtag : ${post.hashtags()}"><a class="text-reset" th:text="'#' + ${hashtag}" th:href="@{/posts(searchType=${searchTypeHashtag},searchValue=${hashtag})}"></a></span></p>
@@ -39,7 +39,7 @@
         </article>
     </div>
 
-    <div class="row g-5" id="post-buttons" th:if="${#authorization.expression('isAuthenticated()')} and *{user.username} == ${#authentication.name}">
+    <div class="row g-5" id="post-buttons" th:if="${#authorization.expression('isAuthenticated()')} and *{username} == ${#authentication.name}">
         <form id="delete-post-form" th:action="'/posts/delete/' + ${post.id}" th:method="post">
             <div class="pb-5 d-grid gap-2 d-md-block">
                 <a class="btn btn-success me-md-2" role="button" id="update-article" th:href="'/posts/modify/' + *{id}">수정</a>
@@ -68,7 +68,7 @@
                         <input type="hidden" class="post-id" th:name="postId" th:value="*{id()}">
                         <div class="row">
                             <div class="col-md-10 col-lg-9">
-                                <strong th:text="${comment.username()}"></strong>
+                                <strong th:text="${comment.nickname()}"></strong>
                                 <small><time th:datetime="${comment.registeredAt()}" th:text="${#temporals.format(comment.registeredAt(), 'yy-MM-dd HH:mm')}"></time></small>
                                 <p class="mb-1" th:text="${comment.content()}"></p>
                             </div>
@@ -84,7 +84,7 @@
                                 <input type="hidden" class="post-id" th:name="postId" th:value="*{id}">
                                 <div class="row">
                                     <div class="col-md-10 col-lg-9">
-                                        <strong th:text="${childComment.username()}"></strong>
+                                        <strong th:text="${childComment.nickname()}"></strong>
                                         <small><time th:datetime="${childComment.registeredAt()}" th:text="${#temporals.format(childComment.registeredAt(), 'yy-MM-dd HH:mm')}"></time></small>
                                         <p class="mb-1" th:name="content" th:text="${childComment.content()}"></p>
                                     </div>

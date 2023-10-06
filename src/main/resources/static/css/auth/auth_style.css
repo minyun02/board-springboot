@@ -111,7 +111,7 @@ body {
   color: #ff0080;
 }
 
-.container .kakao a,
+.container .kakao a img,
 .container .naver a,
 .container .google a,
 .container .signup a {
@@ -120,7 +120,6 @@ body {
   width: 100%;
   font-size: 15px;
   text-decoration: none;
-  padding-left: 20px;
   line-height: 50px;
   color: #fff;
   border-radius: 5px;
