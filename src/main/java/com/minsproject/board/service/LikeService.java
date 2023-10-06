@@ -1,11 +1,14 @@
 package com.minsproject.board.service;
 
+import com.minsproject.board.domain.constant.AlarmType;
+import com.minsproject.board.domain.entity.AlarmEntity;
 import com.minsproject.board.domain.entity.LikeEntity;
 import com.minsproject.board.domain.entity.PostEntity;
 import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.dto.LikeDto;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.exception.ErrorCode;
+import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.LikeEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
 import com.minsproject.board.repository.UserEntityRepository;
@@ -23,11 +26,10 @@ public class LikeService {
     private final UserEntityRepository userEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final LikeEntityRepository likeEntityRepository;
+    private final AlarmEntityRepository alarmEntityRepository;
 
     public Boolean hasLikedBefore(List<LikeDto> likeDtos, Integer userId) {
         List<LikeDto> list = likeDtos.stream().filter(like -> like.userId().equals(userId)).collect(Collectors.toList());
-
-        System.out.println(list.isEmpty());
 
         return list.isEmpty();
     }
@@ -43,12 +45,18 @@ public class LikeService {
                 .orElseThrow(() -> new BoardException(ErrorCode.POST_NOT_FOUND, String.format("postId = %d", postId)));
 
         likeEntityRepository.save(LikeEntity.of(user, post));
+
+        alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
     }
 
     @Transactional
     public void removeLike(Integer postId, Integer userId) {
         LikeEntity entity = likeEntityRepository.findByPostIdAndUserId(postId, userId);
+        PostEntity post = postEntityRepository.findById(postId)
+                .orElseThrow(() -> new BoardException(ErrorCode.POST_NOT_FOUND, String.format("postId = %d", postId)));
 
         likeEntityRepository.deleteById(entity.getId());
+
+        alarmEntityRepository.delete(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
     }
 }

@@ -1,10 +1,13 @@
 package com.minsproject.board.service;
 
+import com.minsproject.board.domain.constant.AlarmType;
+import com.minsproject.board.domain.entity.AlarmEntity;
 import com.minsproject.board.domain.entity.CommentEntity;
 import com.minsproject.board.domain.entity.PostEntity;
 import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.dto.CommentDto;
 import com.minsproject.board.exception.BoardException;
+import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.CommentEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
 import com.minsproject.board.repository.UserEntityRepository;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class CommentService {
+    private final AlarmEntityRepository alarmEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
     private final UserEntityRepository userEntityRepository;
@@ -30,9 +34,12 @@ public class CommentService {
             if (dto.parentCommentId() != null) {
                 CommentEntity parentComment = commentEntityRepository.getReferenceById(dto.parentCommentId());
                 parentComment.addChildComment(comment);
+
             } else {
                 commentEntityRepository.save(comment);
+
             }
+            alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_COMMENT, dto.userId(), dto.postId()));
         } catch (BoardException e) {
             log.warn("댓글 저장 실패. - {}", e.getLocalizedMessage());
         }
