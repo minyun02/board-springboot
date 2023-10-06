@@ -26,7 +26,11 @@ public class UserEntity {
     @Column(unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String password;
+
+    @Column
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
@@ -46,10 +50,11 @@ public class UserEntity {
     @PreUpdate
     void updatedAt() { this.updatedAt = LocalDateTime.now(); }
 
-    public static UserEntity of(String username, String encodedPassword) {
+    public static UserEntity of(String username, String encodedPassword, String nickname) {
         UserEntity entity = new UserEntity();
         entity.setUsername(username);
         entity.setPassword(encodedPassword);
+        entity.setNickname(nickname);
         return entity;
     }
 }

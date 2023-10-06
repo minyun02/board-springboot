@@ -11,6 +11,7 @@ public record CommentResponse(
         Integer id,
         Integer postId,
         String username,
+        String nickname,
         String content,
         Integer parentCommentId,
         LocalDateTime registeredAt,
@@ -22,16 +23,18 @@ public record CommentResponse(
             Integer id,
             Integer postId,
             String username,
+            String nickname,
             String content,
             LocalDateTime registeredAt
     ) {
-        return CommentResponse.of(id, postId, username, content, null, registeredAt, null, null);
+        return CommentResponse.of(id, postId, username, nickname, content, null, registeredAt, null, null);
     }
 
     public static CommentResponse of(
             Integer id,
             Integer postId,
             String username,
+            String nickname,
             String content,
             Integer parentCommentId,
             LocalDateTime registeredAt,
@@ -43,7 +46,7 @@ public record CommentResponse(
                 .thenComparingInt(CommentResponse::id);
 
         return new CommentResponse(
-                id, postId, username, content, parentCommentId, registeredAt, updatedAt, removedAt, new TreeSet<>(childCommentComparator)
+                id, postId, username, nickname, content, parentCommentId, registeredAt, updatedAt, removedAt, new TreeSet<>(childCommentComparator)
         );
     }
     public static CommentResponse from(CommentDto dto) {
@@ -51,6 +54,7 @@ public record CommentResponse(
                 dto.id(),
                 dto.postId(),
                 dto.username(),
+                dto.nickname(),
                 dto.content(),
                 dto.parentCommentId(),
                 dto.registeredAt(),

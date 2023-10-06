@@ -28,6 +28,7 @@
                                 <a th:href="'/posts/' + ${myPost.id()}"><h2 class="card-title text-muted" th:text="${myPost.title()}"></h2></a>
                                 <a th:href="'/posts/' + ${myPost.id()}"><p class="card-text p-y-1" th:text="${myPost.body()}"></p></a>
                                 <a th:href="'/posts/' + ${myPost.id()}"><p class="" th:date="${myPost.registeredAt()}" th:text="${#temporals.format(myPost.registeredAt(), 'yyyy년 MM월 dd일')}"></p></a>
+                                <a th:href="'/posts/modify/' + ${myPost.id()}"><p class="my-modify" th:date="${myPost.registeredAt()}" th:text="수정하기"></p></a>
                             </div>
                         </div>
                     </div>

@@ -21,6 +21,7 @@ public record CommentRequest(
                 postId,
                 user.getId(),
                 user.getUsername(),
+                user.getNickname(),
                 content,
                 parentCommentId
         );

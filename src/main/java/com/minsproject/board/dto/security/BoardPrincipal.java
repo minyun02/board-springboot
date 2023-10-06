@@ -5,23 +5,32 @@ import com.minsproject.board.dto.UserDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public record BoardPrincipal(
         Integer id,
         String username,
         String password,
+        String nickname,
         UserRole role,
+        Map<String, Object> oAuth2Attributes,
         LocalDateTime removedAt
 
-) implements UserDetails {
+) implements UserDetails, OAuth2User {
 
-    public static BoardPrincipal of(Integer id, String username, String password, UserRole role, LocalDateTime removedAt) {
+    public static BoardPrincipal of(Integer id, String username, String password, String nickname, UserRole role, LocalDateTime removedAt) {
         return new BoardPrincipal(
-                id, username, password, role, removedAt);
+                id, username, password, nickname, role, Map.of(), removedAt);
+    }
+
+    public static BoardPrincipal of(Integer id, String username, String password, String nickname, UserRole role, Map<String, Object> oAuth2Attributes, LocalDateTime removedAt) {
+        return new BoardPrincipal(
+                id, username, password, nickname, role, oAuth2Attributes, removedAt);
     }
 
     public static BoardPrincipal from(UserDto dto) {
@@ -29,6 +38,7 @@ public record BoardPrincipal(
                 dto.getId(),
                 dto.getUsername(),
                 dto.getPassword(),
+                dto.getNickname(),
                 dto.getRole(),
                 dto.getRemovedAt()
         );
@@ -39,6 +49,7 @@ public record BoardPrincipal(
                 id,
                 username,
                 password,
+                nickname,
                 role
         );
     }
@@ -77,4 +88,10 @@ public record BoardPrincipal(
     public boolean isEnabled() {
         return removedAt == null;
     }
+
+    @Override
+    public Map<String, Object> getAttributes() { return oAuth2Attributes; }
+
+    @Override
+    public String getName() { return username; }
 }

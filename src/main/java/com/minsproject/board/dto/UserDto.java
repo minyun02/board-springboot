@@ -24,13 +24,14 @@ public class UserDto implements UserDetails {
     private Integer id;
     private String username;
     private String password;
+    private String nickname;
     private UserRole role;
     private LocalDateTime registeredAt;
     private LocalDateTime updatedAt;
     private LocalDateTime removedAt;
 
-    public static UserDto of(Integer id, String username, String password, UserRole role) {
-        return new UserDto(id, username, password, role, null, null, null);
+    public static UserDto of(Integer id, String username, String password, String nickname, UserRole role) {
+        return new UserDto(id, username, password, nickname, role, null, null, null);
     }
 
     public static UserDto fromEntity(UserEntity entity) {
@@ -38,6 +39,7 @@ public class UserDto implements UserDetails {
                 entity.getId(),
                 entity.getUsername(),
                 entity.getPassword(),
+                entity.getNickname(),
                 entity.getRole(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),

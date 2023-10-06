@@ -13,9 +13,8 @@ a:hover, a:active {text-decoration: none; color: #000000;}
     padding-right: 5px;
     margin-top: 20px;
 }
-}
 
-.my-my-nav-link {
+.my-nav-link {
     text-decoration: none;
     display: inline-block;
     padding: 13px 13px;
@@ -44,5 +43,9 @@ a:hover, a:active {text-decoration: none; color: #000000;}
     .my-nav-link {
         padding: 20px 20px;
     }
+
+.my-modify {
+    color: blue;
+}
 
 }
