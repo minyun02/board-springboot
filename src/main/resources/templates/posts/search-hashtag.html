@@ -46,7 +46,7 @@
         <tr th:each="post : ${posts}">
             <td class="title"><a th:text="${post.title()}" th:href="@{'/posts/' + ${post.id()}}"></a></td>
             <td class="content"><span class="d-inline-block text-truncate" style="max-width: 300px;" th:text="${post.body()}"></span></td>
-            <td class="user-id" th:text="${post.user().userName()}"></td>
+            <td class="user-id" th:text="${post.nickname()}"></td>
             <td class="created-at"><time th:datetime="${post.registeredAt()}" th:text="${#temporals.format(post.registeredAt(), 'yy-MM-dd HH:mm')}"></time></td>
         </tr>
         </tbody>
