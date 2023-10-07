@@ -1,7 +1,7 @@
-#alarm-container a {color: #000000; text-decoration: none; outline: none;}
-#alarm-container a:hover,
-#alarm-container a:active,
-#alarm-container a:visited {
+#alarm-container .alarm-a-tag {color: #000000; text-decoration: none; outline: none;}
+#alarm-container .alarm-a-tag:hover,
+#alarm-container .alarm-a-tag:active,
+#alarm-container .alarm-a-tag:visited {
     text-decoration: none; color: #000000;
 }
 

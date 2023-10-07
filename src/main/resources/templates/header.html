@@ -12,7 +12,12 @@
                 <li><a id="home" class="header-nav nav-link px-2 text-secondary" th:href="@{/}">Home</a></li>
                 <li><a id="hashtag" class="header-nav nav-link px-2 text-secondary" th:href="@{/posts/search-hashtag}" >Hashtags</a></li>
                 <li><a id="my_posts" class="header-nav nav-link px-2 text-secondary" th:href="@{/posts/my}" >My Posts</a></li>
-                <li><a id="notifications" class="header-nav nav-link px-2 text-secondary" th:href="@{/users/alarm}" >Notifications</a></li>
+                <li>
+                    <a id="notifications" class="header-nav nav-link px-2 text-secondary" th:href="@{/users/alarm}">Notifications
+                        <span id="notification-count" style="display: none;"></span>
+                    </a>
+
+                </li>
             </ul>
 
             <div class="text-end">
@@ -23,8 +28,9 @@
             </div>
         </div>
     </div>
+    <link rel="stylesheet" href="/css/header.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="/js/posts/global.js"></script>
+    <script src="/js/header.js"></script>
 </header>
 </body>
 </html>
