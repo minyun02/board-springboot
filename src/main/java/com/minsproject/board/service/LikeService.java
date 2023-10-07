@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class LikeService {
-
+    private final AlarmService alarmService;
     private final UserEntityRepository userEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final LikeEntityRepository likeEntityRepository;
@@ -46,7 +46,8 @@ public class LikeService {
 
         likeEntityRepository.save(LikeEntity.of(user, post));
 
-        alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
+        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
+        alarmService.send(alarmEntity.getId(), post.getUser().getId());
     }
 
     @Transactional
@@ -56,7 +57,5 @@ public class LikeService {
                 .orElseThrow(() -> new BoardException(ErrorCode.POST_NOT_FOUND, String.format("postId = %d", postId)));
 
         likeEntityRepository.deleteById(entity.getId());
-
-        alarmEntityRepository.delete(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
     }
 }

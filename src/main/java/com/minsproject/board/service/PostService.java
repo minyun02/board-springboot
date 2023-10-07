@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final HashtagService hashtagService;
+    private final AlarmService alarmService;
     private final UserEntityRepository userEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final HashtagEntityRepository hashtagEntityRepository;

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class CommentService {
+    private final AlarmService alarmService;
     private final AlarmEntityRepository alarmEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
@@ -39,7 +40,8 @@ public class CommentService {
                 commentEntityRepository.save(comment);
 
             }
-            alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_COMMENT, dto.userId(), dto.postId()));
+            AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_COMMENT, dto.userId(), dto.postId()));
+            alarmService.send(alarmEntity.getId(), post.getUser().getId());
         } catch (BoardException e) {
             log.warn("댓글 저장 실패. - {}", e.getLocalizedMessage());
         }
