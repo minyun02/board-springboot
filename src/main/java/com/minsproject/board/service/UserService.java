@@ -91,6 +91,7 @@ public class UserService {
 
     public Page<AlarmDto> getAlarm(Integer userId, Pageable pageable) {
         Page<AlarmEntity> alarm = alarmEntityRepository.findAllByUserId(userId, pageable);
+
         return alarm.map(AlarmDto::fromEntity);
     }
 }

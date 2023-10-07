@@ -3,6 +3,7 @@ package com.minsproject.board.domain.entity;
 import com.minsproject.board.domain.constant.AlarmType;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -38,6 +39,7 @@ public class AlarmEntity {
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
 
+    @Setter
     @Column(name = "checked_at")
     private LocalDateTime checkedAt;
 
@@ -46,9 +48,6 @@ public class AlarmEntity {
 
     @PrePersist
     void registeredAt() { this.registeredAt = LocalDateTime.now(); }
-
-    @PreUpdate
-    void checkedAt() { this.checkedAt = LocalDateTime.now(); }
 
     protected AlarmEntity() {}
 
