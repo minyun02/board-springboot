@@ -3,8 +3,10 @@ package com.minsproject.board.controller;
 import com.minsproject.board.dto.request.UserJoinRequest;
 import com.minsproject.board.dto.response.AlarmResponse;
 import com.minsproject.board.dto.security.BoardPrincipal;
+import com.minsproject.board.service.PaginationService;
 import com.minsproject.board.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,12 +16,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/users")
 @Controller
 public class UserController {
 
     private final UserService userService;
+    private final PaginationService paginationService;
 
     @GetMapping("/signup")
     public String signup(ModelMap map) {
@@ -45,9 +51,12 @@ public class UserController {
     public String alarm(@AuthenticationPrincipal BoardPrincipal boardPrincipal,
                         ModelMap map,
                         @PageableDefault(sort = "registeredAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        log.info("getAlarm from /alarm");
         Page<AlarmResponse> alarms = userService.getAlarm(boardPrincipal.id(), pageable).map(AlarmResponse::from);
+        List<Integer> pageNumbers = paginationService.getPageNumbers(pageable.getPageNumber(), alarms.getTotalPages());
 
         map.addAttribute("alarms", alarms);
+        map.addAttribute("pageNumbers", pageNumbers);
 
         return "posts/alarm";
     }

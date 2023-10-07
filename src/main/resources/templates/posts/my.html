@@ -35,6 +35,22 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div></div>
+            <nav id="pagination" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a th:href="@{/posts/my(page=${myPosts.number - 1})}" th:class="'page-link' + (${myPosts.number} <= 0 ? ' disabled' : '')">이전</a>
+                    </li>
+                    <li class="page-item" th:each="postPageNumber : ${postsPageNumbers}">
+                        <a th:text="${postPageNumber + 1}" th:href="@{/users/alarm(page=${postPageNumber})}" th:class="'page-link' + (${postPageNumber} == ${myPosts.number} ? ' disabled' : '')">
+                        </a>
+                    </li>
+                    <li class="page-item"><a th:href="@{/users/alarm(page=${myPosts.number + 1})}" th:class="'page-link' + (${myPosts.number} >= ${myPosts.totalPages - 1} ? ' disabled' : '')">다음</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 
     <div id="comment-container" th:object="${myComments}" style="display: none;">
@@ -50,6 +66,22 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
+                <div></div>
+                <nav id="comment-pagination" aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a th:href="@{/posts/my(page=${myComments.number - 1})}" th:class="'page-link' + (${myComments.number} <= 0 ? ' disabled' : '')">이전</a>
+                        </li>
+                        <li class="page-item" th:each="commentPageNumber : ${commentsPageNumbers}">
+                            <a th:text="${commentPageNumber + 1}" th:href="@{/users/alarm(page=${commentPageNumber})}" th:class="'page-link' + (${commentPageNumber} == ${myComments.number} ? ' disabled' : '')">
+                            </a>
+                        </li>
+                        <li class="page-item"><a th:href="@{/users/alarm(page=${myComments.number + 1})}" th:class="'page-link' + (${myComments.number} >= ${myComments.totalPages - 1} ? ' disabled' : '')">다음</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

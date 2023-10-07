@@ -7,6 +7,7 @@ import com.minsproject.board.dto.response.PostResponse;
 import com.minsproject.board.domain.constant.FormStatus;
 import com.minsproject.board.dto.response.PostWithCommentsResponse;
 import com.minsproject.board.dto.security.BoardPrincipal;
+import com.minsproject.board.service.AlarmService;
 import com.minsproject.board.service.LikeService;
 import com.minsproject.board.service.PaginationService;
 import com.minsproject.board.service.PostService;
@@ -28,8 +29,6 @@ import java.util.Set;
 @RequestMapping("/posts")
 @Controller
 public class PostController {
-
-    private final LikeService likeService;
     private final PostService postService;
     private final PaginationService paginationService;
 

@@ -2,8 +2,8 @@
     justify-content: center;
 }
 
-a {color: #000000; text-decoration: none; outline: none}
-a:hover, a:active {text-decoration: none; color: #000000;}
+.card-block a {color: #000000; text-decoration: none; outline: none}
+.card-block a:hover, .card-block a:active {text-decoration: none; color: #000000;}
 
 .my-nav {
     text-align: center;
@@ -30,10 +30,7 @@ a:hover, a:active {text-decoration: none; color: #000000;}
 .my-nav-link.current {
     border-bottom: 2px solid #1971c2;
 }
-.btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-}
+
 @media (min-width: 768px) {
     .my-nav {
         font-size: 1.1rem;
@@ -43,9 +40,8 @@ a:hover, a:active {text-decoration: none; color: #000000;}
     .my-nav-link {
         padding: 20px 20px;
     }
+}
 
 .my-modify {
     color: blue;
-}
-
 }

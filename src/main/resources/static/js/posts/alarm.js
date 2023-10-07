@@ -5,6 +5,10 @@ window.onload = () => {
         console.log("connection opened")
     })
 
+    eventSource.addEventListener('connect', event => {
+        console.log(event.data);
+    })
+
     eventSource.addEventListener('alarm', event => {
         let message = event.data;
         console.log(message)
@@ -24,13 +28,13 @@ window.onload = () => {
     })
 }
 
-
-function refresh() {
+function forwardToPost(alarmId, postId) {
     $.ajax({
         type: 'GET',
-        url: '/users/alarm',
+        url: '/alarm/check/' + alarmId,
         success: function (data) {
-
+            console.log(data)
+            location.href = "/posts/" + postId;
         },
         error: function (error) {
             console.log(error);
