@@ -2,7 +2,7 @@ package com.minsproject.board.service;
 
 import com.minsproject.board.domain.entity.AlarmEntity;
 import com.minsproject.board.exception.BoardException;
-import com.minsproject.board.exception.ErrorCode;
+import com.minsproject.board.domain.constant.ErrorCode;
 import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.EmitterRepository;
 import lombok.RequiredArgsConstructor;

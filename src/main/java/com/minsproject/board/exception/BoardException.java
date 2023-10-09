@@ -1,5 +1,6 @@
 package com.minsproject.board.exception;
 
+import com.minsproject.board.domain.constant.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
