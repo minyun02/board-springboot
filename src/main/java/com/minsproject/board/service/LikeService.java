@@ -7,7 +7,7 @@ import com.minsproject.board.domain.entity.PostEntity;
 import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.dto.LikeDto;
 import com.minsproject.board.exception.BoardException;
-import com.minsproject.board.exception.ErrorCode;
+import com.minsproject.board.domain.constant.ErrorCode;
 import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.LikeEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;

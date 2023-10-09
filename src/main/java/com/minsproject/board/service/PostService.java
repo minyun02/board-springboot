@@ -3,7 +3,7 @@ package com.minsproject.board.service;
 import com.minsproject.board.domain.entity.*;
 import com.minsproject.board.dto.CommentDto;
 import com.minsproject.board.dto.PostWithCommentsDto;
-import com.minsproject.board.exception.ErrorCode;
+import com.minsproject.board.domain.constant.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.SearchType;
 import com.minsproject.board.dto.PostDto;

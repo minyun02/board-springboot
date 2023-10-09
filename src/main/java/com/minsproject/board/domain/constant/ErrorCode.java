@@ -1,4 +1,4 @@
-package com.minsproject.board.exception;
+package com.minsproject.board.domain.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

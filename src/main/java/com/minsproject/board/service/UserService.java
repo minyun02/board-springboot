@@ -3,7 +3,7 @@ package com.minsproject.board.service;
 import com.minsproject.board.domain.entity.AlarmEntity;
 import com.minsproject.board.dto.AlarmDto;
 import com.minsproject.board.repository.AlarmEntityRepository;
-import com.minsproject.board.exception.ErrorCode;
+import com.minsproject.board.domain.constant.ErrorCode;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.dto.UserDto;
 import com.minsproject.board.domain.entity.UserEntity;
@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
@@ -50,7 +51,8 @@ public class UserService {
     @Transactional
     public UserDto join(String username, String password, @RequestParam(required = false) String nickname) {
         userEntityRepository.findByUsername(username).ifPresent(it -> {
-            throw new BoardException(ErrorCode.DUPLICATED_USER_NAME, String.format("username = $s", username));
+
+            throw new BoardException(ErrorCode.DUPLICATED_USER_NAME, String.format("이미 존재하는 username = %s", username));
         });
 
         UserEntity savedUser = userEntityRepository.save(UserEntity.of(username, encoder.encode(password), nickname));
