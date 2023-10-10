@@ -36,7 +36,7 @@ DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
 
 IDLE_PROFILE=$(find_profile)
-echo "> 현재 PROFILE -> ${IDLE_PROFILE}"
+echo "> 현재 PROFILE -> ${IDLE_PROFILE}" >> $DEPLOY_LOG_PATH
 nohup java -jar -Dspring.profiles.active=$IDLE_PROFILE $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 #nohup java -jar $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 
