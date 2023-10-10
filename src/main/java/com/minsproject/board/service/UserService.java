@@ -49,7 +49,7 @@ public class UserService {
     public boolean checkDuplicatedUsername(String username) {
         return userEntityRepository.findByUsername(username).isPresent();
     }
-    
+
     @Transactional
     public UserDto join(UserAuthRequest user) {
         UserEntity savedUser = userEntityRepository.save(UserEntity.of(user.username(), encoder.encode(user.password()), user.nickname()));
