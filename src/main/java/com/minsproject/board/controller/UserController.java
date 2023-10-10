@@ -1,8 +1,10 @@
 package com.minsproject.board.controller;
 
-import com.minsproject.board.dto.request.UserJoinRequest;
+import com.minsproject.board.domain.constant.ErrorCode;
+import com.minsproject.board.dto.request.UserAuthRequest;
 import com.minsproject.board.dto.response.AlarmResponse;
 import com.minsproject.board.dto.security.BoardPrincipal;
+import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.service.PaginationService;
 import com.minsproject.board.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,16 +32,23 @@ public class UserController {
     private final PaginationService paginationService;
 
     @GetMapping("/signup")
-    public String signup(ModelMap map) {
+    public String signup(UserAuthRequest userAuthRequest) {
+
         return "auth/signup";
     }
 
     @PostMapping("/signup")
-//    public String signup(String username, String password, ModelMap map) {
-    public String signup(UserJoinRequest request, ModelMap map) {
-//        map.addAttribute("result", Response.success(UserJoinResponse.from(userService.join(username, password))));
-//        userService.join(username, password);
-        userService.join(request.username(), request.password(), request.nickname());
+    public String signup(UserAuthRequest userAuthRequest, BindingResult bindingResult) {
+        if (userService.checkDuplicatedUsername(userAuthRequest.username())) {
+            bindingResult.addError(new FieldError("userJoinRequest", "username", new BoardException(ErrorCode.DUPLICATED_USER_NAME).getLocalizedMessage()));
+        }
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResults = {}", bindingResult);
+            return "auth/signup";
+        }
+
+        userService.join(userAuthRequest);
 
         return "redirect:/login";
     }

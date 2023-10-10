@@ -4,6 +4,4 @@ public record UserJoinRequest(
         String username,
         String password,
         String nickname
-) {
-
-}
+) { }
