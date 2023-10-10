@@ -157,3 +157,7 @@ body {
   background: linear-gradient(to right, #3b5998 0%, #476bb8 100%);
   margin: 20px 0 15px 0;
 }
+
+.error-class {
+  color: red;
+}
