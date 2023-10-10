@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="UTF-8" />
     <title>회원가입</title>
@@ -9,11 +9,12 @@
   </head>
   <body>
     <div class="container">
-      <form action="/users/signup" method="POST">
+      <form action="/users/login" method="POST" th:object="${userAuthRequest}">
         <div class="title">회원가입</div>
         <div class="input-box underline">
-          <input type="text" name="username" placeholder="Username" required />
+          <input type="text" placeholder="Username" required th:field="*{username}"/>
           <div class="underline"></div>
+          <div th:errorclass="error-class" th:errors="*{username}"></div>
         </div>
         <div class="input-box">
           <input type="password" name="password" placeholder="Password" required />
