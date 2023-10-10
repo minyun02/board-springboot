@@ -1,6 +1,7 @@
 #!/bin/bash
 PROJECT_NAME="board"
 JAR_PATH="/home/ubuntu/board/build/libs/*.jar"
+SCRIPT_PATH="/home/ubuntu/board/scripts"
 DEPLOY_PATH=/home/ubuntu/$PROJECT_NAME/
 DEPLOY_LOG_PATH="/home/ubuntu/$PROJECT_NAME/deploy.log"
 DEPLOY_ERR_LOG_PATH="/home/ubuntu/$PROJECT_NAME/deploy_err.log"
@@ -15,9 +16,7 @@ echo "> build 파일 복사" >> $DEPLOY_LOG_PATH
 cp $BUILD_JAR $DEPLOY_PATH
 
 echo "> 현재 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
-ABSPATH=$(readlink -f $0)
-ABSDIR=$(dirname $ABSPATH)
-source $(ABSDIR/profile.sh)
+source $SCRIPT_PATH/profile.sh
 
 IDLE_PORT=$(find_port)
 CURRENT_PID=$(lsof -ti tcp:${IDLE_PORT})
