@@ -43,9 +43,9 @@ nohup java -jar -Dspring.profiles.active=$IDLE_PROFILE $DEPLOY_JAR >> $APPLICATI
 sleep 3
 
 echo "> 엔진엑스 설정 -> 전환할 port: ${IDLE_PORT}" >> $DEPLOY_LOG_PATH
-echo "> port 전환"
+echo "> port 전환"  >> $DEPLOY_LOG_PATH
 echo "set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/includes/service-url
-echo "> 엔진엑스 Reload"
+echo "> 엔진엑스 Reload" >> $DEPLOY_LOG_PATH
 sudo service nginx reload
 
 echo "> 배포 종료 : $(date +%c)" >> $DEPLOY_LOG_PATH
