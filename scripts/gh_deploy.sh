@@ -15,7 +15,13 @@ echo "> build 파일 복사" >> $DEPLOY_LOG_PATH
 cp $BUILD_JAR $DEPLOY_PATH
 
 echo "> 현재 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
-CURRENT_PID=$(pgrep -f $JAR_NAME)
+ABSPATH=$(readlink -f $0)
+ABSDIR=$(dirname $ABSPATH)
+source $(ABSDIR/profile.sh)
+
+IDLE_PORT=$(find_port)
+CURRENT_PID=$(lsof -ti tcp:${IDLE_PORT})
+#CURRENT_PID=$(pgrep -f $JAR_NAME)
 
 if [ -z $CURRENT_PID ]
 then
@@ -29,9 +35,19 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
-#nohup java -jar -Dspring.profiles.active=dev $DEPLOY_JAR --server-port=8081 >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
-nohup java -jar $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+
+IDLE_PROFILE=$(find_profile)
+
+nohup java -jar -Dspring.profiles.active=IDLE_PROFILE $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+#nohup java -jar $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 
 sleep 3
+
+IDLE_PORT=$()
+echo "> 엔진엑스 설정 -> 전환할 port: ${IDLE_PORT}" >> $DEPLOY_LOG_PATH
+echo "> port 전환"
+echo "set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/includes/service-url
+echo "> 엔진엑스 Reload"
+sudo service nginx reload
 
 echo "> 배포 종료 : $(date +%c)" >> $DEPLOY_LOG_PATH
