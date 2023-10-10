@@ -43,7 +43,8 @@ public class AuthConfiguration {
                         .requestMatchers(
                                 "/",
                                 "/users/signup",
-                                "/posts"
+                                "/posts",
+                                "/profile"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
