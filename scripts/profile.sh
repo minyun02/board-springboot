@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function find_profile() {
+function find_new_profile() {
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
       if [ ${RESPONSE_CODE} -ge 400 ] # 400 보다 크면 (즉, 40x/50x 에러 모두 포함)
@@ -12,18 +12,37 @@ function find_profile() {
 
       if [ ${CURRENT_PROFILE} == real1 ]
       then
-        IDLE_PROFILE=real2
+        NEW_PROFILE=real2
       else
-        IDLE_PROFILE=real1
+        NEW_PROFILE=real1
       fi
 
-      echo "${IDLE_PROFILE}"
+      echo "${NEW_PROFILE}"
   }
 
+function find_current_profile() {
+  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
+
+      if [ ${RESPONSE_CODE} -ge 400 ] # 400 보다 크면 (즉, 40x/50x 에러 모두 포함)
+      then
+          CURRENT_PROFILE=real2
+      else
+          CURRENT_PROFILE=$(curl -s http://localhost/profile)
+      fi
+
+      if [ ${CURRENT_PROFILE} == real1 ]
+      then
+        CURRENT_PROFILE=real1
+      else
+        CURRENT_PROFILE=real2
+      fi
+
+      echo "${CURRENT_PROFILE}"
+  }
   # 쉬고 있는 profile의 port 찾기
   function find_port()
   {
-      IDLE_PROFILE=$(find_profile)
+      IDLE_PROFILE=$(find_new_profile)
 
       if [ ${IDLE_PROFILE} == real1 ]
       then
