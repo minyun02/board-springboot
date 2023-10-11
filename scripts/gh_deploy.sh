@@ -20,20 +20,11 @@ source $SCRIPT_PATH/profile.sh
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
 
-NEW_PROFILE=$(find_new_profile)
-echo "> 새로운 PROFILE -> ${NEW_PROFILE}" >> $DEPLOY_LOG_PATH
-nohup java -jar -Dspring.profiles.active=$NEW_PROFILE $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
-#nohup java -jar $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
-
-sleep 5
-
-OLD_PROFILE=$(find_current_profile)
 OLD_PORT=$(find_old_port)
 OLD_PID=$(lsof -ti tcp:${OLD_PORT})
 #OLD_PID=$(pgrep -f $JAR_NAME)
 
-echo "> 이전 PROFILE -> ${OLD_PROFILE}" >> $DEPLOY_LOG_PATH
-echo "> 이전 PORT -> ${OLD_PROFILE}" >> $DEPLOY_LOG_PATH
+echo "> 이전 PORT -> ${OLD_PORT}" >> $DEPLOY_LOG_PATH
 echo "> 이전 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
 if [ -z $OLD_PID ]
 then
@@ -44,6 +35,13 @@ else
   echo "> kill -9 $OLD_PID" >> $DEPLOY_LOG_PATH
   kill -9 $OLD_PID
 fi
+
+NEW_PROFILE=$(find_profile)
+echo "> 새로운 PROFILE -> ${NEW_PROFILE}" >> $DEPLOY_LOG_PATH
+nohup java -jar -Dspring.profiles.active=$NEW_PROFILE $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+#nohup java -jar $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+
+sleep 5
 
 NEW_PORT=$(find_port)
 NEW_PID=$(lsof -ti tcp:${NEW_PORT})

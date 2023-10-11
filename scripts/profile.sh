@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function find_new_profile() {
+function find_profile() {
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
       if [ ${RESPONSE_CODE} -ge 400 ] # 400 보다 크면 (즉, 40x/50x 에러 모두 포함)
@@ -20,29 +20,21 @@ function find_new_profile() {
       echo "${NEW_PROFILE}"
   }
 
-function find_current_profile() {
-  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
+  function find_old_port()
+  {
+      IDLE_PROFILE=$(find_profile)
 
-      if [ ${RESPONSE_CODE} -ge 400 ] # 400 보다 크면 (즉, 40x/50x 에러 모두 포함)
+      if [ ${IDLE_PROFILE} == real1 ]
       then
-          CURRENT_PROFILE=real2
+        echo "8082"
       else
-          CURRENT_PROFILE=$(curl -s http://localhost/profile)
+        echo "8081"
       fi
-
-      if [ ${CURRENT_PROFILE} == real1 ]
-      then
-        CURRENT_PROFILE=real1
-      else
-        CURRENT_PROFILE=real2
-      fi
-
-      echo "${CURRENT_PROFILE}"
-  }
+}
 
   function find_port()
   {
-      IDLE_PROFILE=$(find_new_profile)
+      IDLE_PROFILE=$(find_profile)
 
       if [ ${IDLE_PROFILE} == real1 ]
       then
@@ -50,16 +42,4 @@ function find_current_profile() {
       else
         echo "8082"
       fi
-  }
-
-  function find_old_port()
-  {
-      IDLE_PROFILE=$(find_new_profile)
-
-      if [ ${IDLE_PROFILE} == real1 ]
-      then
-        echo "8082"
-      else
-        echo "8081"
-      fi
-  }
+}
