@@ -34,6 +34,8 @@ echo "set \$service_url http://127.0.0.1:${NEW_PORT};" | sudo tee /etc/nginx/inc
 echo "> 엔진엑스 Reload" >> $DEPLOY_LOG_PATH
 sudo service nginx reload
 
+sleep 3
+
 OLD_PROFILE=$(find_current_profile)
 OLD_PORT=$(find_old_port)
 OLD_PID=$(lsof -ti tcp:${OLD_PORT})
