@@ -20,22 +20,6 @@ source $SCRIPT_PATH/profile.sh
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
 
-OLD_PORT=$(find_old_port)
-OLD_PID=$(lsof -ti tcp:${OLD_PORT})
-#OLD_PID=$(pgrep -f $JAR_NAME)
-
-echo "> 이전 PORT -> ${OLD_PORT}" >> $DEPLOY_LOG_PATH
-echo "> 이전 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
-if [ -z $OLD_PID ]
-then
-  echo "> 이전 동작중인 어플리케이션 존재 X" >> $DEPLOY_LOG_PATH
-else
-  echo "> 이전 동작중인 어플리케이션 존재 O" >> $DEPLOY_LOG_PATH
-  echo "> 이전 동작중인 어플리케이션 강제 종료 진행" >> $DEPLOY_LOG_PATH
-  echo "> kill -9 $OLD_PID" >> $DEPLOY_LOG_PATH
-  kill -9 $OLD_PID
-fi
-
 NEW_PROFILE=$(find_profile)
 echo "> 새로운 PROFILE -> ${NEW_PROFILE}" >> $DEPLOY_LOG_PATH
 nohup java -jar -Dspring.profiles.active=$NEW_PROFILE $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
@@ -52,6 +36,22 @@ then
   echo "set \$service_url http://127.0.0.1:${NEW_PORT};" | sudo tee /etc/nginx/includes/service-url
   echo "> 엔진엑스 Reload" >> $DEPLOY_LOG_PATH
   sudo service nginx reload
+fi
+
+OLD_PORT=$(find_old_port)
+OLD_PID=$(lsof -ti tcp:${OLD_PORT})
+#OLD_PID=$(pgrep -f $JAR_NAME)
+
+echo "> 이전 PORT -> ${OLD_PORT}" >> $DEPLOY_LOG_PATH
+echo "> 이전 동작중인 어플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
+if [ -z $OLD_PID ]
+then
+  echo "> 이전 동작중인 어플리케이션 존재 X" >> $DEPLOY_LOG_PATH
+else
+  echo "> 이전 동작중인 어플리케이션 존재 O" >> $DEPLOY_LOG_PATH
+  echo "> 이전 동작중인 어플리케이션 강제 종료 진행" >> $DEPLOY_LOG_PATH
+  echo "> kill -9 $OLD_PID" >> $DEPLOY_LOG_PATH
+  kill -9 $OLD_PID
 fi
 
 echo "> 배포 종료 : $(date +%c)" >> $DEPLOY_LOG_PATH
