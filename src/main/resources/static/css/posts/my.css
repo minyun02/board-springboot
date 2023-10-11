@@ -2,6 +2,10 @@
     justify-content: center;
 }
 
+.card {
+    margin-bottom: 20px;
+}
+
 .card-block a {color: #000000; text-decoration: none; outline: none}
 .card-block a:hover, .card-block a:active {text-decoration: none; color: #000000;}
 

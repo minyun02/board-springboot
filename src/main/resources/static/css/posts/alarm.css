@@ -67,3 +67,12 @@
     transform: translate(0,-50%);
     height: 20px;
 }
+
+.checked {
+    border: 1px solid rgba(181, 178, 178, 0.81);
+    background-color: rgba(211, 208, 208, 0.16);
+    box-shadow: 0px 0px 2px #514f4f;
+    color: #000000;
+    transition:0.5s;
+    cursor:pointer;
+}
