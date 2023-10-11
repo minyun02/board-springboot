@@ -21,13 +21,13 @@ DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
 
 NEW_PROFILE=$(find_profile)
+NEW_PORT=$(find_port)
 echo "> 새로운 PROFILE -> ${NEW_PROFILE}" >> $DEPLOY_LOG_PATH
-nohup java -jar -Dspring.profiles.active=$NEW_PROFILE $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+nohup java -jar -Dspring.profiles.active=$NEW_PROFILE $DEPLOY_JAR --server-port=$NEW_PORT >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 #nohup java -jar $DEPLOY_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 
 sleep 5
 
-NEW_PORT=$(find_port)
 NEW_PID=$(lsof -ti tcp:${NEW_PORT})
 echo "> 엔진엑스 설정 -> 전환할 port: ${NEW_PORT}" >> $DEPLOY_LOG_PATH
 if [ -z $NEW_PID ]
