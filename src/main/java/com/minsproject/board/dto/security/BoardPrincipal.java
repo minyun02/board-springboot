@@ -34,11 +34,15 @@ public record BoardPrincipal(
     }
 
     public static BoardPrincipal from(UserDto dto) {
+        String nickname = dto.getNickname();
+        if (nickname == null || nickname.isBlank()) {
+            nickname = dto.getUsername();
+        }
         return BoardPrincipal.of(
                 dto.getId(),
                 dto.getUsername(),
                 dto.getPassword(),
-                dto.getNickname(),
+                nickname,
                 dto.getRole(),
                 dto.getRemovedAt()
         );
