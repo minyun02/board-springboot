@@ -1,13 +1,14 @@
 package com.minsproject.board.service;
 
 import com.minsproject.board.domain.constant.AlarmType;
-import com.minsproject.board.domain.entity.AlarmEntity;
 import com.minsproject.board.domain.entity.LikeEntity;
 import com.minsproject.board.domain.entity.PostEntity;
 import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.dto.LikeDto;
+import com.minsproject.board.dto.event.AlarmEvent;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.ErrorCode;
+import com.minsproject.board.producer.AlarmProducer;
 import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.LikeEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
@@ -22,11 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class LikeService {
-    private final AlarmService alarmService;
+    private final AlarmProducer alarmProducer;
     private final UserEntityRepository userEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final LikeEntityRepository likeEntityRepository;
-    private final AlarmEntityRepository alarmEntityRepository;
 
     public Boolean hasLikedBefore(List<LikeDto> likeDtos, Integer userId) {
         List<LikeDto> list = likeDtos.stream().filter(like -> like.userId().equals(userId)).collect(Collectors.toList());
@@ -46,8 +46,9 @@ public class LikeService {
 
         likeEntityRepository.save(LikeEntity.of(user, post));
 
-        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
-        alarmService.send(alarmEntity.getId(), post.getUser().getId());
+//        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_LIKE, userId, postId));
+//        alarmService.send(alarmEntity.getId(), post.getUser().getId());
+        alarmProducer.send(new AlarmEvent(post.getUser().getId(), AlarmType.NEW_LIKE, userId, postId));
     }
 
     @Transactional
