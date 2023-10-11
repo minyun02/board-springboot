@@ -21,7 +21,7 @@
             <div class="row" th:each="alarm : ${alarms}">
                 <div class="col-sm-12">
                     <a class="alarm-a-tag" th:onclick="forwardToPost([[${alarm.id()}]], [[${alarm.targetId()}]])">
-                        <div th:class="'alert alert-simple ' + ${alarm.alarmType().toString().toLowerCase()} ">
+                        <div th:class="'alert alert-simple ' + (${alarm.checkedAt() != null} ? ' checked' : ${alarm.alarmType().toString().toLowerCase()})">
                             <strong class="font__weight-semibold" th:text="${alarm.alarmType().getAlarmText()}"/>
                         </div>
                     </a>
