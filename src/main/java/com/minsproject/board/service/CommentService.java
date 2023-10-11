@@ -6,7 +6,9 @@ import com.minsproject.board.domain.entity.CommentEntity;
 import com.minsproject.board.domain.entity.PostEntity;
 import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.dto.CommentDto;
+import com.minsproject.board.dto.event.AlarmEvent;
 import com.minsproject.board.exception.BoardException;
+import com.minsproject.board.producer.AlarmProducer;
 import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.CommentEntityRepository;
 import com.minsproject.board.repository.PostEntityRepository;
@@ -22,10 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentService {
     private final AlarmService alarmService;
+    private final AlarmProducer alarmProducer;
     private final AlarmEntityRepository alarmEntityRepository;
     private final PostEntityRepository postEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
     private final UserEntityRepository userEntityRepository;
+
     public void saveComment(CommentDto dto) {
         try {
             PostEntity post = postEntityRepository.getReferenceById(dto.postId());
@@ -40,8 +44,9 @@ public class CommentService {
                 commentEntityRepository.save(comment);
 
             }
-            AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_COMMENT, dto.userId(), dto.postId()));
-            alarmService.send(alarmEntity.getId(), post.getUser().getId());
+//            AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(post.getUser(), AlarmType.NEW_COMMENT, dto.userId(), dto.postId()));
+//            alarmService.send(alarmEntity.getId(), post.getUser().getId());
+            alarmProducer.send(new AlarmEvent(post.getUser().getId(), AlarmType.NEW_COMMENT, dto.userId(), dto.postId()));
         } catch (BoardException e) {
             log.warn("댓글 저장 실패. - {}", e.getLocalizedMessage());
         }

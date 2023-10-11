@@ -1,10 +1,13 @@
 package com.minsproject.board.service;
 
+import com.minsproject.board.domain.constant.AlarmType;
 import com.minsproject.board.domain.entity.AlarmEntity;
+import com.minsproject.board.domain.entity.UserEntity;
 import com.minsproject.board.exception.BoardException;
 import com.minsproject.board.domain.constant.ErrorCode;
 import com.minsproject.board.repository.AlarmEntityRepository;
 import com.minsproject.board.repository.EmitterRepository;
+import com.minsproject.board.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,17 +20,23 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Service
 public class AlarmService {
-    private final AlarmEntityRepository alarmEntityRepository;
     private final static Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
     private final static String ALARM_NAME = "alarm";
+    private final UserEntityRepository userEntityRepository;
+    private final AlarmEntityRepository alarmEntityRepository;
     private final EmitterRepository emitterRepository;
 
-    public void send(Integer alarmId, Integer userId) {
-        emitterRepository.get(userId).ifPresentOrElse(sseEmitter -> {
+//    public void send(Integer alarmId, Integer userId) {
+    public void send(AlarmType type, Integer fromUserId, Integer targetId, Integer receiverUserId) {
+        // alarm save
+        UserEntity user = userEntityRepository.findById(receiverUserId).orElseThrow(() -> new BoardException(ErrorCode.USER_NOT_FOUND));
+        AlarmEntity alarmEntity = alarmEntityRepository.save(AlarmEntity.of(user, type, fromUserId, targetId));
+
+        emitterRepository.get(receiverUserId).ifPresentOrElse(sseEmitter -> {
             try {
-                sseEmitter.send(SseEmitter.event().id(alarmId.toString()).name(ALARM_NAME).data("new alarm"));
+                sseEmitter.send(SseEmitter.event().id(alarmEntity.getId().toString()).name(ALARM_NAME).data("new alarm"));
             } catch (IOException exception) {
-                emitterRepository.delete(userId);
+                emitterRepository.delete(receiverUserId);
                 throw new BoardException(ErrorCode.ALARM_CONNECT_ERROR);
             }
         }, () -> log.info("No emitter found"));
