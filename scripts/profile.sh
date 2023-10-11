@@ -39,7 +39,7 @@ function find_current_profile() {
 
       echo "${CURRENT_PROFILE}"
   }
-  # 쉬고 있는 profile의 port 찾기
+
   function find_port()
   {
       IDLE_PROFILE=$(find_new_profile)
@@ -49,5 +49,17 @@ function find_current_profile() {
         echo "8081"
       else
         echo "8082"
+      fi
+  }
+
+  function find_old_port()
+  {
+      IDLE_PROFILE=$(find_new_profile)
+
+      if [ ${IDLE_PROFILE} == real1 ]
+      then
+        echo "8082"
+      else
+        echo "8081"
       fi
   }
